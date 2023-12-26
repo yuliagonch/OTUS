@@ -19,12 +19,12 @@ namespace Reflection
             stopwatch.Stop();
             Console.WriteLine($"ReflectionSerialize execution time in {SerializHelper.iterCount} iterations = {stopwatch.ElapsedMilliseconds} ms");
 
-            stopwatch.Reset();
+            //stopwatch.Reset();
             stopwatch.Start();
             Console.WriteLine("Serialized string by reflection: ");
             Console.WriteLine(serializedS);
             stopwatch.Stop();
-            Console.WriteLine($"SerializString output time = {stopwatch.ElapsedMilliseconds} ms");
+            Console.WriteLine($"With console output = {stopwatch.ElapsedMilliseconds} ms");
 
             // Json serialize
             stopwatch.Reset();
