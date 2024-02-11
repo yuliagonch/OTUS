@@ -22,6 +22,7 @@ namespace Reflection
             Task.WaitAll(tasks);
 
             stopwatch.Stop();
+            Console.WriteLine("");
             Console.WriteLine($"Время чтения 3 файлов = {stopwatch.ElapsedMilliseconds} мс");
 
             Console.WriteLine("");
@@ -36,6 +37,7 @@ namespace Reflection
             Task.WaitAll(tasksList.ToArray());
 
             stopwatch.Stop();
+            Console.WriteLine("");
             Console.WriteLine($"Время чтения файлов из папки {path} = {stopwatch.ElapsedMilliseconds} мс");
 
             Console.ReadKey();

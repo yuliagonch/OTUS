@@ -28,7 +28,7 @@ namespace TaskProject
             {
                 res = File.ReadAllText(FileName).Count(x => x == ch);
 
-                Console.WriteLine($"В файле {FileName} {res} пробелов");
+                Console.WriteLine($"{res} символов '{ch}' в файле {FileName}");
 
             }
             catch (Exception ex)
