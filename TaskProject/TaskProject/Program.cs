@@ -3,7 +3,7 @@ using System;
 using System.Diagnostics;
 using TaskProject;
 
-namespace Reflection
+namespace TaskProject
 {
     internal class Program
     {
