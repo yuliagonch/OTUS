@@ -29,12 +29,8 @@ namespace TaskProject
             Console.WriteLine("Прочитать все файлы из папки и вычислить количество пробелов в них");
             stopwatch.Start();
 
-            string path = (Path.Combine(Environment.CurrentDirectory, "Files"));
-            var fileNamesList = fileReader.GetFileNames(path);
-            var tasksList = new List<Task>();
-            foreach ( var file in fileNamesList )
-                tasksList.Add(Task.Run(() => fileReader.CalcCharsNum(file, ' ')));
-            Task.WaitAll(tasksList.ToArray());
+            string path = Path.Combine(Environment.CurrentDirectory, "Files");
+            fileReader.CalcCharsNumByPath(path, ' ');
 
             stopwatch.Stop();
             Console.WriteLine("");

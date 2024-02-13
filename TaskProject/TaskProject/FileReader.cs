@@ -38,7 +38,16 @@ namespace TaskProject
 
             return res;
         }
-        
+
+        public void CalcCharsNumByPath(string path, char ch)
+        {
+            var fileNamesList = this.GetFileNames(path);
+            var tasksList = new List<Task>();
+            foreach (var file in fileNamesList)
+                tasksList.Add(Task.Run(() => this.CalcCharsNum(file, ch)));
+            Task.WaitAll(tasksList.ToArray());
+        }
+
         public List<string> GetFileNames(string path)
         {
             List<string> fileNames = new List<string>();
