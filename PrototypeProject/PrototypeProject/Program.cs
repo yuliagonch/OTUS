@@ -8,8 +8,8 @@ namespace PrototypeProject
     {
         static void Main(string[] args)
         {
-            IMyCloneable square = new Square(10, "Квадрат");
-            IMyCloneable clonedSquare = square.Clone("Прототип квадрата");
+            Shape square = new Square(10, "Квадрат");
+            Shape clonedSquare = (Shape)square.Clone("Прототип квадрата");
             Console.WriteLine("Исходная фигура:");
             square.GetInfo();
             Console.WriteLine("Клонированная фигура:");
