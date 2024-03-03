@@ -21,7 +21,7 @@ namespace PrototypeProject.Model
             this._height = height;
         }
 
-        public override IMyCloneable Clone(string name)
+        public override Rectangle Clone(string name)
         {
             return new Rectangle(this._width, this._height, name);
         }

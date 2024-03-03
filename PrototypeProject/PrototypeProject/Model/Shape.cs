@@ -9,7 +9,7 @@ namespace PrototypeProject.Model
     /// <summary>
     /// Базовый класс Фигура
     /// </summary>
-    internal class Shape: IMyCloneable, ICloneable
+    internal class Shape: IMyCloneable<Shape>, ICloneable
     {
         public string Name { get { return _name; } }
 
@@ -18,7 +18,7 @@ namespace PrototypeProject.Model
             _name = name;
         }
 
-        public virtual IMyCloneable Clone(string name)
+        public virtual Shape Clone(string name)
         {
             return new Shape(name);
         }

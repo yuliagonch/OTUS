@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace PrototypeProject
 {
-    internal interface IMyCloneable
+    internal interface IMyCloneable<T> where T : class
     {
-        IMyCloneable Clone(string name);
+        T Clone(string name);
         void GetInfo();
     }
 }

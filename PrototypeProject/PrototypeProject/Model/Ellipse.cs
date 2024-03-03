@@ -21,7 +21,7 @@ namespace PrototypeProject.Model
             this._radiusY = radiusY;
         }
 
-        public override IMyCloneable Clone(string name)
+        public override Ellipse Clone(string name)
         {
             return new Ellipse(this._radiusX, this._radiusY, name);
         }

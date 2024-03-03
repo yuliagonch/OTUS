@@ -21,7 +21,7 @@ namespace PrototypeProject.Model
             this._side = side;
         }
 
-        public override IMyCloneable Clone(string name)
+        public override Square Clone(string name)
         {
             return new Square(this._side, name);
         }

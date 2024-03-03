@@ -19,9 +19,9 @@ namespace PrototypeProject.Model
             this._radius = radius;
         }
 
-        public override IMyCloneable Clone(string name)
+        public override Circle Clone(string name)
         {
-            return new Circle(this._radius, this.Name);
+            return new Circle(this._radius, name);
         }
 
         public override void GetInfo()
