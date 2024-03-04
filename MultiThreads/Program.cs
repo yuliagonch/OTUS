@@ -8,30 +8,18 @@ namespace MultiThreads
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Введите размер массива");
-
-            string sizeStr = Console.ReadLine();
-            int size = 0;
-            try
-            {
-                size = Convert.ToInt32(sizeStr);
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine(ex.Message);
-                return;
-            }
-
-            int[] arr = FillArray(size);
+            int[] arr1 = FillArray(100000);
+            int[] arr2 = FillArray(1000000);
+            int[] arr3 = FillArray(10000000);
 
             Console.WriteLine("------------------------------------------------------------------");
             Console.WriteLine("Обычное вычисление суммы элементов массива интов");
             Console.WriteLine("------------------------------------------------------------------");
             Console.WriteLine();
 
-            CalcSumNormal(arr, 100000);
-            CalcSumNormal(arr, 1000000);
-            CalcSumNormal(arr, 10000000);
+            CalcSumNormal(arr1);
+            CalcSumNormal(arr2);
+            CalcSumNormal(arr3);
 
             Console.WriteLine();
             Console.WriteLine("------------------------------------------------------------------");
@@ -39,9 +27,9 @@ namespace MultiThreads
             Console.WriteLine("------------------------------------------------------------------");
             Console.WriteLine();
 
-            CalcSumByTasksList(arr, 100000);
-            CalcSumByTasksList(arr, 1000000);
-            CalcSumByTasksList(arr, 10000000);
+            CalcSumByTasksList(arr1);
+            CalcSumByTasksList(arr2);
+            CalcSumByTasksList(arr3);
 
             Console.WriteLine();
             Console.WriteLine("------------------------------------------------------------------");
@@ -49,9 +37,9 @@ namespace MultiThreads
             Console.WriteLine("------------------------------------------------------------------");
             Console.WriteLine();
 
-            CalcSumParallel(arr, 100000);
-            CalcSumParallel(arr, 1000000);
-            CalcSumParallel(arr, 10000000);
+            CalcSumParallel(arr1);
+            CalcSumParallel(arr2);
+            CalcSumParallel(arr3);
 
             Console.ReadKey();
         }
@@ -60,21 +48,16 @@ namespace MultiThreads
         /// Обычное вычисление суммы элементов массива интов
         /// </summary>
         /// <param name="arr">Массив интов</param>
-        /// <param name="iterationsCount">Число итеарций</param>
-        private static void CalcSumNormal(int[] arr, int iterationsCount)
+        private static void CalcSumNormal(int[] arr)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            int sum = 0;
-            for (int i = 0; i < iterationsCount; i++)
-            {
-                sum = SumArr(arr);
-            }
+            int sum = SumArr(arr, 0, arr.Length);
 
             stopwatch.Stop();
 
-            Console.WriteLine($"Сумма элементов массива (Обычное) = {sum}, время выполнения {iterationsCount} итераций = {stopwatch.ElapsedMilliseconds} мс");
+            Console.WriteLine($"Сумма элементов массива (Обычное) = {sum}, время выполнения для массива размером {arr.Length} = {stopwatch.ElapsedMilliseconds} мс");
         }
 
         /// <summary>
@@ -82,56 +65,57 @@ namespace MultiThreads
         /// </summary>
         /// <param name="arr">Массив интов</param>
         /// <param name="iterationsCount">Число итеарций</param>
-        private static void CalcSumByTasksList(int[] arr, int iterationsCount)
+        private static void CalcSumByTasksList(int[] arr)
         {
             var tasks = new List<Task>();
-            
+
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
             int sum = 0;
-            for (int i = 0; i < iterationsCount; i++)
+            int size = 1000;
+            // Делим массив на кусочки по size элементов
+            for (int i = 0; i < arr.Length / size; i++)
             {
-                Task t = Task.Run(() => sum = SumArr(arr));
+                int fromIndex = i * size;
+                int toIndex = (i + 1) * size;
+                Task t = Task.Factory.StartNew(() => SumArr(arr, fromIndex, toIndex));
                 tasks.Add(t);
             }
 
-            Task.WhenAll(tasks);
+            Task.WaitAll(tasks.ToArray());
+            foreach (Task<int> task in tasks)
+                sum += task.Result;
 
             stopwatch.Stop();
 
-            Console.WriteLine($"Сумма элементов массива (Параллельное с List<Task>) = {sum}, время выполнения {iterationsCount} тасков = {stopwatch.ElapsedMilliseconds} мс");
+            Console.WriteLine($"Сумма элементов массива (Параллельное с List<Task>) = {sum}, время выполнения для массива размером {arr.Length} = {stopwatch.ElapsedMilliseconds} мс");
         }
 
         /// <summary>
         /// Параллельное с помощью LINQ вычисление суммы элементов массива интов
         /// </summary>
         /// <param name="arr">Массив интов</param>
-        /// <param name="iterationsCount">Число итеарций</param>
-        private static void CalcSumParallel(int[] arr, int iterationsCount)
+        private static void CalcSumParallel(int[] arr)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            int sum = 0;
-            ParallelLoopResult res = Parallel.ForEach(Enumerable.Range(1, iterationsCount), (_) => sum = SumArr(arr));
+            int sum = arr.AsParallel().Sum();
 
-            if (res.IsCompleted)
-            {
-                stopwatch.Stop();
-                Console.WriteLine($"Сумма элементов массива (Параллельное с Parallel.Foreach) = {sum}, время выполнения {iterationsCount} таскво = {stopwatch.ElapsedMilliseconds} мс");
-            }
-            }
+            stopwatch.Stop();
+            Console.WriteLine($"Сумма элементов массива (Параллельное с Parallel.Foreach) = {sum}, время выполнения для массива размером {arr.Length} = {stopwatch.ElapsedMilliseconds} мс");
+        }
 
         /// <summary>
         /// Вычислиение суммы элементов массива интов
         /// </summary>
         /// <param name="arr">Массив интов</param>
         /// <returns>Рассчитанная сумма элементов массива интов</returns>
-        private static int SumArr(int[] arr)
+        private static int SumArr(int[] arr, int fromIndex, int toIndex)
         {
             int sum = 0;
-            for (int i = 0; i < arr.Length; i++)
+            for (int i = fromIndex; i < toIndex; i++)
                 sum += arr[i];
 
             return sum;
@@ -150,7 +134,7 @@ namespace MultiThreads
 
             for (int i = 0; i < size; i++)
             {
-                arr[i] = rnd.Next(0, 255);
+                arr[i] = rnd.Next(0, 100);
             }
 
             return arr;
